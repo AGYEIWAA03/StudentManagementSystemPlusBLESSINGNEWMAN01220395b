@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="controller.DashboardController" style="-fx-background-color: #f4f6f8;">
+
+    <!-- TOP: Custom Title Bar -->
+    <top>
+        <HBox style="-fx-background-color: #2c3e50; -fx-padding: 0; -fx-pref-height: 35;" alignment="CENTER_RIGHT" fx:id="titleBar">
+
+            <Label text="  AJ Management System" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;" HBox.hgrow="NEVER"/>
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <HBox spacing="0" alignment="CENTER_RIGHT">
+                <Button fx:id="btnMinimize" text=" — " onAction="#handleMinimize"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 0; -fx-border-width: 0; -fx-cursor: hand;"/>
+                <Button fx:id="btnMaximize" text=" □ " onAction="#handleMaximize"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 0; -fx-border-width: 0; -fx-cursor: hand;"/>
+                <Button fx:id="btnClose" text=" ✕ " onAction="#handleClose"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 0; -fx-border-width: 0; -fx-cursor: hand;"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- CENTER: Main Content -->
+    <center>
+        <HBox>
+            <!-- LEFT SIDE: Vertical Navigation Panel -->
+            <VBox style="-fx-background-color: #34495e; -fx-pref-width: 220; -fx-min-width: 220;" spacing="10" alignment="TOP_CENTER">
+
+                <!-- Logo Area (With Icon) -->
+                <VBox alignment="CENTER" style="-fx-padding: 30 0 20 0;">
+                    <!-- Added Icon here -->
+                    <Label text="🎓" style="-fx-font-size: 30px;"/>
+                    <Label text="AJ MANAGEMENT " style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    <Label text="SYSTEM " style="-fx-font-size: 12px; -fx-text-fill: #bdc3c7;"/>
+                </VBox>
+
+                <Separator orientation="HORIZONTAL" style="-fx-background-color: #4a6278;"/>
+
+                <!-- Navigation Buttons (With Icons) -->
+                <VBox spacing="5" style="-fx-padding: 10;">
+                    <!-- Students Button with Icon -->
+                    <Button text="👥  Students" onAction="#openStudentsWindow"
+                            style="-fx-background-color: #3e5871; -fx-text-fill: white; -fx-font-size: 14px; -fx-alignment: CENTER-LEFT; -fx-pref-width: Infinity; -fx-padding: 12 20; -fx-background-radius: 5; -fx-cursor: hand;"/>
+
+                    <!-- Reports Button with Icon -->
+                    <Button text="📊  Reports" onAction="#openReportsWindow"
+                            style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-alignment: CENTER-LEFT; -fx-pref-width: Infinity; -fx-padding: 12 20; -fx-background-radius: 5; -fx-cursor: hand;"/>
+
+                    <!-- Import/Export Button with Icon -->
+                    <Button text="📂  Import / Export" onAction="#openImportWindow"
+                            style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-alignment: CENTER-LEFT; -fx-pref-width: Infinity; -fx-padding: 12 20; -fx-background-radius: 5; -fx-cursor: hand;"/>
+
+                    <!-- Settings Button with Icon -->
+                    <Button text="⚙️  Settings" onAction="#openSettingsWindow"
+                            style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-alignment: CENTER-LEFT; -fx-pref-width: Infinity; -fx-padding: 12 20; -fx-background-radius: 5; -fx-cursor: hand;"/>
+                </VBox>
+
+                <Region VBox.vgrow="ALWAYS"/>
+                <Label text="v21.0.10" style="-fx-text-fill: #7f8c8d; -fx-padding: 20;" alignment="CENTER"/>
+            </VBox>
+
+            <!-- RIGHT SIDE: Main Content Area -->
+            <VBox HBox.hgrow="ALWAYS" spacing="20" style="-fx-padding: 40;">
+
+                <!-- Header -->
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Dashboard Overview" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="Welcome, Admin" style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d;"/>
+                </HBox>
+
+                <!-- Statistics Cards -->
+                <TilePane hgap="20" vgap="20" prefColumns="2" style="-fx-padding: 10 0;">
+
+                    <!-- Card 1 -->
+                    <VBox style="-fx-background-color: #3498db; -fx-padding: 25; -fx-background-radius: 8;" prefWidth="220" prefHeight="130">
+                        <Label text="TOTAL STUDENTS" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        <Region VBox.vgrow="ALWAYS"/>
+                        <Label fx:id="lblTotalStudents" text="0" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    </VBox>
+
+                    <!-- Card 2 -->
+                    <VBox style="-fx-background-color: #2ecc71; -fx-padding: 25; -fx-background-radius: 8;" prefWidth="220" prefHeight="130">
+                        <Label text="ACTIVE STUDENTS" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        <Region VBox.vgrow="ALWAYS"/>
+                        <Label fx:id="lblActiveStudents" text="0" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    </VBox>
+
+                    <!-- Card 3 -->
+                    <VBox style="-fx-background-color: #e74c3c; -fx-padding: 25; -fx-background-radius: 8;" prefWidth="220" prefHeight="130">
+                        <Label text="INACTIVE STUDENTS" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        <Region VBox.vgrow="ALWAYS"/>
+                        <Label fx:id="lblInactiveStudents" text="0" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    </VBox>
+
+                    <!-- Card 4 -->
+                    <VBox style="-fx-background-color: #9b59b6; -fx-padding: 25; -fx-background-radius: 8;" prefWidth="220" prefHeight="130">
+                        <Label text="AVERAGE GPA" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        <Region VBox.vgrow="ALWAYS"/>
+                        <Label fx:id="lblAvgGpa" text="0.00" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    </VBox>
+
+                </TilePane>
+
+                <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8;" VBox.vgrow="ALWAYS">
+                    <Label text="Quick Actions" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                    <Separator/>
+                    <Label text="Use the menu on the left to manage students, generate reports, or import data." style="-fx-text-fill: #7f8c8d; -fx-padding: 10 0;"/>
+                </VBox>
+
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

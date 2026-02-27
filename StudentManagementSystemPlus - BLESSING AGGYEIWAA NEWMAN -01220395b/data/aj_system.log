@@ -1,0 +1,54 @@
+Feb 25, 2026 4:27:54 AM util.AppLogger logError
+SEVERE: Database connection failed: path to 'data/aj_management.db': 'C:\Users\BLUEWAVE COMP\Desktop\CAPSTONE\AJ Management System\data' does not exist
+Feb 25, 2026 5:38:19 AM util.AppLogger logInfo
+INFO: Added student: 1234
+Feb 25, 2026 5:38:28 AM util.AppLogger logInfo
+INFO: Deleted student: 1234
+Feb 25, 2026 11:08:40 AM util.AppLogger logInfo
+INFO: Added student: 01220395B
+Feb 25, 2026 11:09:54 AM util.AppLogger logInfo
+INFO: Added student: 01220456B
+Feb 25, 2026 11:11:56 AM util.AppLogger logInfo
+INFO: Added student: 01220678B
+Feb 25, 2026 11:13:31 AM util.AppLogger logInfo
+INFO: Deleted student: 01220456B
+Feb 25, 2026 11:13:35 AM util.AppLogger logInfo
+INFO: Deleted student: 01220395B
+Feb 25, 2026 11:13:38 AM util.AppLogger logInfo
+INFO: Deleted student: 01220678B
+Feb 25, 2026 2:36:21 PM util.AppLogger logInfo
+INFO: Exported data to data/report_1772030181768.csv
+Feb 25, 2026 2:37:43 PM util.AppLogger logInfo
+INFO: Added student: 01220395B
+Feb 25, 2026 2:39:04 PM util.AppLogger logInfo
+INFO: Added student: 01222222b
+Feb 25, 2026 2:40:20 PM util.AppLogger logInfo
+INFO: Added student: 012333333b
+Feb 25, 2026 2:41:47 PM util.AppLogger logInfo
+INFO: Added student: 012666688b
+Feb 25, 2026 2:43:53 PM util.AppLogger logInfo
+INFO: Updated student: 01220395B
+Feb 25, 2026 4:01:59 PM util.AppLogger logInfo
+INFO: Added student: ST1772035319023
+Feb 27, 2026 12:00:25 PM util.AppLogger logInfo
+INFO: Added student: 01220395B
+Feb 27, 2026 12:18:30 PM util.AppLogger logInfo
+INFO: Added student: S101
+Feb 27, 2026 12:18:30 PM util.AppLogger logInfo
+INFO: Added student: S102
+Feb 27, 2026 12:18:30 PM util.AppLogger logInfo
+INFO: Added student: S103
+Feb 27, 2026 12:18:30 PM util.AppLogger logInfo
+INFO: Added student: S104
+Feb 27, 2026 12:18:30 PM util.AppLogger logInfo
+INFO: Added student: S105
+Feb 27, 2026 12:18:30 PM util.AppLogger logInfo
+INFO: Added student: S106
+Feb 27, 2026 12:18:30 PM util.AppLogger logInfo
+INFO: Added student: S107
+Feb 27, 2026 12:18:30 PM util.AppLogger logInfo
+INFO: Added student: S108
+Feb 27, 2026 12:18:30 PM util.AppLogger logInfo
+INFO: Added student: S109
+Feb 27, 2026 12:18:30 PM util.AppLogger logInfo
+INFO: Added student: S110

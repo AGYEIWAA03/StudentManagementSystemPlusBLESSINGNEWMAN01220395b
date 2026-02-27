@@ -1,0 +1,69 @@
+
+AJ Management System (Student Management System Plus)
+
+Project Overview
+The AJ Management System is a comprehensive desktop application designed to manage student records efficiently.
+Built using JavaFX and SQLite, it replaces traditional spreadsheet-based management with a robust, offline-first solution.
+It features data validation, reporting, and import/export capabilities.
+
+Features
+Dashboard:Real-time overview of total students, active/inactive counts, and average GPA.
+Student Management:Full CRUD (Create, Read, Update, Delete) functionality.
+Search, Filter, & Sort:Find students by ID/Name, filter by Programme/Level/Status, and sort by GPA.
+Reports:
+  - Top Performers (Top 10 GPA).
+  - At-Risk Students (Configurable GPA threshold).
+  - GPA Distribution Summary.
+  - Programme Summary.
+Import/Export:Import student data from CSV and export reports/data to CSV.
+Security: Input validation at both UI and Service layers.
+
+Technical Stack
+-Language:Java 21
+-UI Framework:JavaFX 21
+-Database:SQLite (via JDBC)
+-Build Tool:Maven
+-Architecture:Layered (Controller -> Service -> Repository)
+
+Prerequisites
+1. Java Development Kit (JDK) 21 or higher.
+2. JavaFX SDK 21. (Download from [GluonHQ](https://gluonhq.com/products/javafx/)).
+3. Maven(usually included in IDEs like IntelliJ or Eclipse).
+
+How to Run
+
+ Option 1: Using Maven (Command Line)
+1. Open a terminal/command prompt in the project root directory.
+2. Compile the project:
+   bash
+   mvn clean compile
+3. Run the application:
+   bash
+   mvn javafx:run
+
+Option 2: Using an IDE (IntelliJ IDEA / Eclipse)
+1. Import the project as a Maven project.
+2. Configure VM Options:
+   - Go to Run -> Edit Configurations.
+   - Add the following VM options (modify the path to your JavaFX SDK location):
+
+     --module-path "C:\Path\To\javafx-sdk-21\lib" --add-modules javafx.controls,javafx.fxml
+
+3. Run the `Main.java` class located in `src/main/java/ajmanagementsystem`.
+
+Default Login Credentials
+-Username: admin
+- Password:ATU
+
+ Project Structure
+- src/main/java/ajmanagementsystem: Entry point.
+- src/main/java/controller: JavaFX Controllers (UI Logic).
+- src/main/java/service: Business Logic and Validation.
+- src/main/java/repository: Database Access Layer.
+- src/main/java/domain: Data Models (POJOs).
+- src/main/java/util: Helpers (Logger, DB Handler, Validator).
+- src/main/resources/fxml: UI Layout files.
+
+Author
+-Student Name: [NEWMAN AGYEIWAA BLESSING]
+-Index Number: [01220395B]

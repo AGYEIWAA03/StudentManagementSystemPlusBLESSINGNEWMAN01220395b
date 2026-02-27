@@ -1,0 +1,61 @@
+/* Login Page Specific Styles */
+
+/* Left Side Panel (Blue/Brand side) */
+.login-left {
+    -fx-background-color: #003366; /* Dark Blue like ATU colors */
+    -fx-padding: 40;
+    -fx-alignment: center;
+}
+
+.login-left-label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+/* Right Side Form Area */
+.login-right {
+    -fx-background-color: white;
+    -fx-padding: 40;
+    -fx-alignment: center;
+}
+
+.login-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #003366;
+}
+
+.login-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #666;
+    -fx-padding: 0 0 20 0;
+}
+
+.login-text-field {
+    -fx-background-color: #f4f4f4;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 10;
+    -fx-pref-width: 280px;
+}
+
+.login-button {
+    -fx-background-color: #0056b3;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4;
+    -fx-pref-width: 280px;
+    -fx-padding: 10;
+}
+
+.login-button:hover {
+    -fx-background-color: #003366;
+}
+
+.hyperlink {
+    -fx-text-fill: #0056b3;
+    -fx-border-color: transparent;
+}
