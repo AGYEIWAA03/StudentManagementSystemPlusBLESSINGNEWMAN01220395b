@@ -1,1 +1,2 @@
 # StudentManagementSystemPlusBLESSINGNEWMAN01220395b
+Login:Username:adminPassword:ATU
