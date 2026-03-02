@@ -13,10 +13,11 @@ public class StudentService {
 
     public StudentService() { this.repository = new StudentRepositoryImpl(); }
 
+    // 'throws Exception' allows the error to reach the Controller
     public void addStudent(Student student) throws Exception {
         Validator.validate(student);
         if (repository.getById(student.getStudentId()) != null) {
-            throw new IllegalArgumentException("Duplicate Student ID detected.");
+            throw new IllegalArgumentException("Duplicate Student ID. This ID already exists.");
         }
         repository.add(student);
         AppLogger.logInfo("Added student: " + student.getStudentId());
@@ -34,9 +35,7 @@ public class StudentService {
     }
 
     public ObservableList<Student> getAllStudents() { return repository.getAll(); }
-
     public List<Student> searchStudents(String query) { return repository.search(query); }
-
     public List<Student> getFilteredStudents(String programme, Integer level, String status) {
         return repository.getFiltered(programme, level, status);
     }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<!-- Background: Light Orange/Bisque color -->
+
+<StackPane style="-fx-background-color: #FFE4C1;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="controller.LoginController">
+
+    <!-- Center White Card -->
+    <VBox maxWidth="350" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 40 50; -fx-spacing: 15; -fx-alignment: center; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+
+        <!-- Icon Area (Graduation Cap representation) -->
+        <VBox alignment="CENTER" style="-fx-padding: 0 0 10 0;">
+            <Text style="-fx-font-size: 50px;" text="🎓" />
+        </VBox>
+
+        <!-- Title -->
+        <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Student Management" />
+
+        <!-- Username Field -->
+        <TextField fx:id="tfUsername" promptText="Username" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #ddd; -fx-pref-height: 40; -fx-font-size: 14px;" />
+
+        <!-- Password Field -->
+        <PasswordField fx:id="tfPassword" promptText="Password" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #ddd; -fx-pref-height: 40; -fx-font-size: 14px;" />
+
+        <!-- Error Message -->
+        <Label fx:id="lblError" style="-fx-text-fill: red; -fx-font-size: 12px;" visible="false" />
+
+        <!-- Login Button -->
+        <Button onAction="#handleLogin" prefWidth="Infinity" style="-fx-background-color: #FF8C00; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-pref-height: 40; -fx-font-size: 14px; -fx-cursor: hand;" text="Log In" />
+
+        <!-- Separator Line -->
+        <HBox alignment="CENTER" style="-fx-padding: 10 0 0 0;">
+            <Separator HBox.hgrow="ALWAYS" />
+            <Label style="-fx-text-fill: #999;" text="  OR  " />
+            <Separator HBox.hgrow="ALWAYS" />
+        </HBox>
+
+        <!-- Forgot Password -->
+        <Hyperlink alignment="CENTER" style="-fx-text-fill: #666; -fx-font-size: 12px;" text="Forgot Password?" />
+
+    </VBox>
+</StackPane>

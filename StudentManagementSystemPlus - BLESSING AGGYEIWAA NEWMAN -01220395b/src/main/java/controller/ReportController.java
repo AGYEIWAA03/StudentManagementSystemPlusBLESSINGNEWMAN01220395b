@@ -1,100 +1,145 @@
 package controller;
 
 import domain.Student;
-import service.ImportExportService;
-import service.ReportService;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import java.io.File;
-import java.io.PrintWriter;
+import javafx.fxml.Initializable;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+import service.ReportService;
+import util.SettingsManager;
+import util.UIRefresh;
+
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
-public class ReportController {
-    @FXML private TableView<Student> tableReports;
-    @FXML private TableColumn<Student, String> colRId, colRName, colRGpa;
+public class ReportController implements Initializable {
 
-    @FXML private TableView<Map.Entry<String, Number>> tableSummary;
-    @FXML private TableColumn<Map.Entry<String, Number>, String> colKey;
-    @FXML private TableColumn<Map.Entry<String, Number>, String> colValue;
+    // Charts
+    @FXML private PieChart gpaChart;
+    @FXML private BarChart<String, Number> programmeChart;
+    @FXML private CategoryAxis xAxis;
+    @FXML private NumberAxis yAxis;
 
-    @FXML private ComboBox<String> cbReportType;
-    @FXML private TextField tfGpaThreshold;
-    @FXML private Label lblSummary;
+    // Risk Table
+    @FXML private TableView<Student> riskTable;
+    @FXML private TableColumn<Student, String> colRiskId;
+    @FXML private TableColumn<Student, String> colRiskName;
+    @FXML private TableColumn<Student, String> colRiskProgramme;
+    @FXML private TableColumn<Student, Double> colRiskGpa;
+    @FXML private Label lblRiskThreshold;
 
-    private ReportService reportService = new ReportService();
-    private ImportExportService exportService = new ImportExportService();
+    // Top Performers Table
+    @FXML private TableView<Student> topTable;
+    @FXML private TableColumn<Student, String> colTopId;
+    @FXML private TableColumn<Student, String> colTopName;
+    @FXML private TableColumn<Student, String> colTopProgramme;
+    @FXML private TableColumn<Student, Double> colTopGpa;
+
+    private final ReportService reportService = new ReportService();
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        setupTables();
+        loadAllReports();
+
+        // Refresh automatically if data changes elsewhere
+        UIRefresh.subscribe(this::loadAllReports);
+    }
+
+    private void setupTables() {
+        // Setup Risk Table Columns
+        colRiskId.setCellValueFactory(new PropertyValueFactory<>("studentId"));
+        colRiskName.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        colRiskProgramme.setCellValueFactory(new PropertyValueFactory<>("programme"));
+        colRiskGpa.setCellValueFactory(new PropertyValueFactory<>("gpa"));
+
+        // Setup Top Performers Table Columns
+        colTopId.setCellValueFactory(new PropertyValueFactory<>("studentId"));
+        colTopName.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        colTopProgramme.setCellValueFactory(new PropertyValueFactory<>("programme"));
+        colTopGpa.setCellValueFactory(new PropertyValueFactory<>("gpa"));
+    }
+
+    private void loadAllReports() {
+        loadGpaChart();
+        loadProgrammeChart();
+        loadRiskTable();
+        loadTopPerformers();
+    }
+
+    private void loadGpaChart() {
+        Map<String, Number> data = reportService.getGpaDistribution();
+        gpaChart.getData().clear();
+
+        data.forEach((key, value) -> {
+            if (value.intValue() > 0) {
+                gpaChart.getData().add(new PieChart.Data(key + " (" + value + ")", value.intValue()));
+            }
+        });
+    }
+
+    private void loadProgrammeChart() {
+        Map<String, Number> data = reportService.getProgrammeAverageGpa();
+        programmeChart.getData().clear();
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Avg GPA");
+
+        data.forEach((programme, avgGpa) -> {
+            // Truncate long names for display
+            String displayName = programme.length() > 10 ? programme.substring(0, 10) + "." : programme;
+            series.getData().add(new XYChart.Data<>(displayName, avgGpa));
+        });
+
+        programmeChart.getData().add(series);
+    }
+
+    private void loadRiskTable() {
+        // Get threshold from settings (default 2.0)
+        String thresholdStr = SettingsManager.getSetting("riskThreshold", "2.0");
+        lblRiskThreshold.setText(thresholdStr);
+
+        double threshold = Double.parseDouble(thresholdStr);
+        List<Student> riskStudents = reportService.getAtRiskStudents(threshold);
+        riskTable.setItems(FXCollections.observableArrayList(riskStudents));
+    }
+
+    private void loadTopPerformers() {
+        // Get top 10 students
+        List<Student> topStudents = reportService.getTopPerformers("All", 10);
+        topTable.setItems(FXCollections.observableArrayList(topStudents));
+    }
+
+    // --- TITLE BAR BUTTON LOGIC ---
 
     @FXML
-    public void initialize() {
-        try {
-            cbReportType.getItems().addAll("Top Performers", "At Risk Students", "GPA Distribution", "Programme Summary");
-            cbReportType.setValue("Top Performers");
-
-            colRId.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getStudentId()));
-            colRName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getFullName()));
-            colRGpa.setCellValueFactory(d -> new SimpleStringProperty(String.format("%.2f", d.getValue().getGpa())));
-
-            colKey.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getKey()));
-            colValue.setCellValueFactory(d -> new SimpleStringProperty(String.format("%.2f", d.getValue().getValue().doubleValue())));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void handleMinimize(ActionEvent event) {
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        stage.setIconified(true);
     }
 
     @FXML
-    private void generateReport() {
-        String type = cbReportType.getValue();
-        boolean isStudent = type.equals("Top Performers") || type.equals("At Risk Students");
-
-        tableReports.setVisible(isStudent);
-        tableReports.setManaged(isStudent);
-        tableSummary.setVisible(!isStudent);
-        tableSummary.setManaged(!isStudent);
-
-        try {
-            if (isStudent) {
-                List<Student> list;
-                if (type.equals("Top Performers")) {
-                    list = reportService.getTopPerformers("All", 10);
-                } else {
-                    double t = Double.parseDouble(tfGpaThreshold.getText());
-                    list = reportService.getAtRiskStudents(t);
-                }
-                tableReports.setItems(FXCollections.observableArrayList(list));
-            } else {
-                Map<String, Number> data = type.equals("GPA Distribution") ? reportService.getGpaDistribution() : reportService.getProgrammeAverageGpa();
-                tableSummary.setItems(FXCollections.observableArrayList(data.entrySet()));
-            }
-        } catch (Exception e) {
-            lblSummary.setText("Error: " + e.getMessage());
-        }
+    private void handleMaximize(ActionEvent event) {
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        stage.setMaximized(!stage.isMaximized());
     }
 
-    // FIXED: Implemented Export Logic
     @FXML
-    private void exportReport() {
-        try {
-            new File("data").mkdirs();
-            String filename = "data/report_" + System.currentTimeMillis() + ".csv";
-
-            if (tableReports.isVisible()) {
-                // Export Student List
-                exportService.exportToCSV(tableReports.getItems(), filename);
-            } else {
-                // Export Summary Map
-                try (PrintWriter writer = new PrintWriter(new File(filename))) {
-                    writer.println("Category,Value");
-                    for (Map.Entry<String, Number> entry : tableSummary.getItems()) {
-                        writer.println(entry.getKey() + "," + entry.getValue());
-                    }
-                }
-            }
-            lblSummary.setText("Exported to " + filename);
-        } catch (Exception e) {
-            lblSummary.setText("Export failed: " + e.getMessage());
-        }
+    private void handleClose(ActionEvent event) {
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        stage.close();
     }
 }

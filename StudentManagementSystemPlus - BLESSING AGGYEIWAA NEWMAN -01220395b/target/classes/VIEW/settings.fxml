@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- Added -fx-background-color: #f4f6f8; to VBox -->
+<VBox spacing="20" alignment="CENTER_LEFT" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.SettingsController"
+      style="-fx-padding: 20; -fx-background-color: #f4f6f8;">
+
+    <Label text="System Settings" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+    <!-- Settings Card -->
+    <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 20; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5;">
+        <Label text="At-Risk GPA Threshold:" prefWidth="180"/>
+        <TextField fx:id="tfRiskThreshold" prefWidth="80"/>
+        <Button text="Save" onAction="#saveSettings" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"/>
+    </HBox>
+
+    <Label fx:id="lblSettingsMsg" style="-fx-text-fill: green;"/>
+</VBox>

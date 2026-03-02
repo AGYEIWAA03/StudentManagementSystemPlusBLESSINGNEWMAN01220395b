@@ -1,66 +1,46 @@
 package controller;
 
 import domain.Student;
-import service.ReportService;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.StageStyle; // ADDED IMPORT
+import service.StudentService;
+import util.UIRefresh;
 
-import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class DashboardController implements Initializable {
+
     @FXML private Label lblTotalStudents;
     @FXML private Label lblActiveStudents;
     @FXML private Label lblInactiveStudents;
     @FXML private Label lblAvgGpa;
-    @FXML private HBox titleBar;
 
-    private ReportService reportService = new ReportService();
-    private double xOffset = 0;
-    private double yOffset = 0;
+    private final StudentService studentService = new StudentService();
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        loadDashboardData();
-        setupDraggableWindow();
-
-        // NEW: Refresh data whenever the window gains focus
-        // This ensures stats update immediately after closing a popup
-        titleBar.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene != null) {
-                newScene.windowProperty().addListener((obsW, oldWindow, newWindow) -> {
-                    if (newWindow != null) {
-                        ((Stage) newWindow).focusedProperty().addListener((obsF, wasFocused, isNowFocused) -> {
-                            if (isNowFocused) {
-                                loadDashboardData();
-                            }
-                        });
-                    }
-                });
-            }
-        });
+    public void initialize(URL location, ResourceBundle resources) {
+        loadStats();
+        UIRefresh.subscribe(this::loadStats);
     }
 
-    private void loadDashboardData() {
-        ObservableList<Student> allStudents = reportService.getAllStudents();
-        int total = allStudents.size();
-        long active = reportService.getActiveCount();
+    private void loadStats() {
+        List<Student> students = studentService.getAllStudents();
+
+        long total = students.size();
+        long active = students.stream().filter(s -> "Active".equalsIgnoreCase(s.getStatus())).count();
         long inactive = total - active;
-        double avgGpa = reportService.getAverageGpa();
+        double avgGpa = students.stream().mapToDouble(Student::getGpa).average().orElse(0.0);
 
         lblTotalStudents.setText(String.valueOf(total));
         lblActiveStudents.setText(String.valueOf(active));
@@ -68,100 +48,82 @@ public class DashboardController implements Initializable {
         lblAvgGpa.setText(String.format("%.2f", avgGpa));
     }
 
-    // --- Window Controls ---
-
-    private void setupDraggableWindow() {
-        if (titleBar != null) {
-            titleBar.setOnMousePressed(event -> {
-                xOffset = event.getSceneX();
-                yOffset = event.getSceneY();
-            });
-            titleBar.setOnMouseDragged(event -> {
-                Stage stage = (Stage) titleBar.getScene().getWindow();
-                stage.setX(event.getScreenX() - xOffset);
-                stage.setY(event.getScreenY() - yOffset);
-            });
-        }
-    }
-
-    @FXML
-    private void handleMinimize() {
-        Stage stage = (Stage) lblTotalStudents.getScene().getWindow();
-        stage.setIconified(true);
-    }
-
-    @FXML
-    private void handleMaximize() {
-        Stage stage = (Stage) lblTotalStudents.getScene().getWindow();
-        stage.setMaximized(!stage.isMaximized());
-    }
-
-    @FXML
-    private void handleClose() {
-        Stage stage = (Stage) lblTotalStudents.getScene().getWindow();
-        stage.close();
-    }
-
-    // --- Navigation ---
+    // --- NAVIGATION LOGIC ---
 
     @FXML
     private void openStudentsWindow() {
-        loadWindow("/fxml/Student.fxml", "Student Management", 900, -1);
+        openWindow("/view/Student.fxml", "Students");
     }
 
     @FXML
     private void openReportsWindow() {
-        loadWindow("/fxml/Report.fxml", "Reports", 900, 500);
+        openWindow("/view/Report.fxml", "Reports");
     }
 
     @FXML
     private void openImportWindow() {
-        loadWindow("/fxml/ImportExport.fxml", "Import/Export", 600, 400);
+        openWindow("/view/ImportExport.fxml", "Import / Export");
     }
 
     @FXML
     private void openSettingsWindow() {
-        loadWindow("/fxml/Settings.fxml", "Settings", 500, 300);
+        openWindow("/view/Settings.fxml", "Settings");
     }
 
-    private void loadWindow(String fxmlPath, String title, double width, double height) {
+    // --- TITLE BAR LOGIC (FIXED) ---
+
+    @FXML
+    private void handleMinimize(ActionEvent event) {
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        stage.setIconified(true);
+    }
+
+    @FXML
+    private void handleMaximize(ActionEvent event) {
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        stage.setMaximized(!stage.isMaximized());
+    }
+
+    @FXML
+    private void handleClose(ActionEvent event) {
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        stage.close();
+    }
+
+    // --- HELPER METHOD ---
+
+    private void openWindow(String fxmlPath, String title) {
         try {
-            if (getClass().getResource(fxmlPath) == null) {
-                showError("File Not Found", "Could not find: " + fxmlPath);
+            URL fxmlLocation = getClass().getResource(fxmlPath);
+
+            if (fxmlLocation == null) {
+                fxmlLocation = getClass().getClassLoader().getResource(fxmlPath.substring(1));
+            }
+
+            if (fxmlLocation == null) {
+                showAlert(Alert.AlertType.ERROR, "File Missing", "Could not find file: " + fxmlPath);
                 return;
             }
 
-            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
+            FXMLLoader loader = new FXMLLoader(fxmlLocation);
+            Parent root = loader.load();
             Stage stage = new Stage();
+
+            // FIX: This removes the default Windows title bar
+            stage.initStyle(StageStyle.UNDECORATED);
+
             stage.setTitle(title);
-
-            Scene scene;
-            if (width > 0 && height > 0) {
-                scene = new Scene(root, width, height);
-            } else if (width > 0) {
-                scene = new Scene(root, width, root.prefHeight(-1));
-            } else {
-                scene = new Scene(root);
-            }
-
-            stage.setScene(scene);
-
-            // Position to the right
-            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-            double w = (width > 0) ? width : 800;
-            stage.setX(screenBounds.getMaxX() - w - 20);
-            stage.setY(50);
-
+            stage.setScene(new Scene(root));
             stage.show();
 
         } catch (Exception e) {
             e.printStackTrace();
-            showError("Error", "Failed to open window: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to open " + title + ": " + e.getMessage());
         }
     }
 
-    private void showError(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="controller.ReportController" style="-fx-background-color: #f4f6f8;">
+
+    <!-- TOP: Custom Title Bar -->
+    <top>
+        <HBox style="-fx-background-color: #2c3e50; -fx-padding: 0; -fx-pref-height: 35;" alignment="CENTER_RIGHT">
+            <Label text="  Reports &amp; Analytics" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;" HBox.hgrow="NEVER"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <HBox spacing="0" alignment="CENTER_RIGHT">
+                <Button text=" — " onAction="#handleMinimize"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 0; -fx-cursor: hand;"/>
+                <Button text=" □ " onAction="#handleMaximize"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 0; -fx-cursor: hand;"/>
+                <Button text=" ✕ " onAction="#handleClose"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 0; -fx-cursor: hand;"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- CENTER: Content -->
+    <center>
+        <TabPane tabClosingPolicy="UNAVAILABLE" style="-fx-padding: 10;">
+
+            <!-- Tab 1: Overview Charts -->
+            <Tab text="1. Overview">
+                <VBox spacing="20" style="-fx-padding: 20;">
+                    <!-- GPA Distribution Chart -->
+                    <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 8;">
+                        <Label text="GPA Classification Distribution" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        <Separator/>
+                        <PieChart fx:id="gpaChart" prefHeight="300" labelsVisible="true" legendVisible="true"/>
+                    </VBox>
+
+                    <!-- Programme Performance Chart -->
+                    <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 8;">
+                        <Label text="Average GPA by Programme" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        <Separator/>
+                        <BarChart fx:id="programmeChart" prefHeight="300">
+                            <xAxis><CategoryAxis fx:id="xAxis" label="Programme"/></xAxis>
+                            <yAxis><NumberAxis fx:id="yAxis" label="Average GPA" lowerBound="0" upperBound="4" tickUnit="0.5"/></yAxis>
+                        </BarChart>
+                    </VBox>
+                </VBox>
+            </Tab>
+
+            <!-- Tab 2: At-Risk Students -->
+            <Tab text="2. At-Risk Students">
+                <VBox spacing="10" style="-fx-padding: 20;">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="Students with GPA below threshold:" style="-fx-font-weight: bold; -fx-text-fill: #e74c3c;"/>
+                        <Label fx:id="lblRiskThreshold" text="2.0" style="-fx-font-weight: bold;"/>
+                    </HBox>
+                    <TableView fx:id="riskTable" prefHeight="400" style="-fx-background-color: white;">
+                        <columns>
+                            <TableColumn fx:id="colRiskId" text="ID" prefWidth="80"/>
+                            <TableColumn fx:id="colRiskName" text="Name" prefWidth="180"/>
+                            <TableColumn fx:id="colRiskProgramme" text="Programme" prefWidth="120"/>
+                            <TableColumn fx:id="colRiskGpa" text="GPA" prefWidth="60"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <!-- Tab 3: Top Performers -->
+            <Tab text="3. Top Performers">
+                <VBox spacing="10" style="-fx-padding: 20;">
+                    <Label text="Top 10 Students by GPA" style="-fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+                    <TableView fx:id="topTable" prefHeight="400" style="-fx-background-color: white;">
+                        <columns>
+                            <TableColumn fx:id="colTopId" text="ID" prefWidth="80"/>
+                            <TableColumn fx:id="colTopName" text="Name" prefWidth="180"/>
+                            <TableColumn fx:id="colTopProgramme" text="Programme" prefWidth="120"/>
+                            <TableColumn fx:id="colTopGpa" text="GPA" prefWidth="60"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+        </TabPane>
+    </center>
+</BorderPane>

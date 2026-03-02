@@ -10,10 +10,13 @@ public class AppLogger {
     static {
         try {
             new java.io.File("data").mkdirs();
-            FileHandler fh = new FileHandler(LOG_FILE, true);
-            fh.setFormatter(new SimpleFormatter());
-            logger.addHandler(fh);
-            logger.setUseParentHandlers(false);
+            // Avoid adding duplicate handlers if class is loaded multiple times
+            if (logger.getHandlers().length == 0) {
+                FileHandler fh = new FileHandler(LOG_FILE, true);
+                fh.setFormatter(new SimpleFormatter());
+                logger.addHandler(fh);
+                logger.setUseParentHandlers(false); // Set to true if you want console output too
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
